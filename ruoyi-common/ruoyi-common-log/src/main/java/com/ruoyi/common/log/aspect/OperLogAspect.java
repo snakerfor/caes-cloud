@@ -1,7 +1,12 @@
 package com.ruoyi.common.log.aspect;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.aspectj.lang.JoinPoint;
@@ -14,12 +19,12 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
+import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.log.annotation.OperLog;
 import com.ruoyi.common.log.enums.BusinessStatus;
 import com.ruoyi.common.log.event.SysOperLogEvent;
 import com.ruoyi.common.utils.AddressUtils;
 import com.ruoyi.common.utils.IpUtils;
-import com.ruoyi.common.utils.JwtUtil;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringContextHolder;
@@ -57,7 +62,7 @@ public class OperLogAspect
      * 拦截异常操作
      * 
      * @param joinPoint 切点
-     * @param e 异常
+     * @param e         异常
      */
     @AfterThrowing(value = "logPointCut()", throwing = "e")
     public void doAfterThrowing(JoinPoint joinPoint, Exception e)
@@ -84,8 +89,8 @@ public class OperLogAspect
             operLog.setOperIp(ip);
             operLog.setOperUrl(request.getRequestURI());
             operLog.setOperLocation(AddressUtils.getRealAddressByIP(ip));
-            String token = request.getHeader("token");
-            operLog.setOperName(JwtUtil.getUsername(token));
+            String username = request.getHeader(Constants.CURRENT_USERNAME);
+            operLog.setOperName(username);
             if (e != null)
             {
                 operLog.setStatus(BusinessStatus.FAIL.ordinal());
@@ -95,6 +100,8 @@ public class OperLogAspect
             String className = joinPoint.getTarget().getClass().getName();
             String methodName = joinPoint.getSignature().getName();
             operLog.setMethod(className + "." + methodName + "()");
+         // 设置请求方式
+            operLog.setRequestMethod(request.getMethod());
             // 处理设置注解上的参数
             Object[] args = joinPoint.getArgs();
             getControllerMethodDescription(controllerLog, operLog, args);
@@ -113,7 +120,7 @@ public class OperLogAspect
     /**
      * 获取注解中对方法的描述信息 用于Controller层注解
      * 
-     * @param log 日志
+     * @param log     日志
      * @param operLog 操作日志
      * @throws Exception
      */
@@ -134,14 +141,17 @@ public class OperLogAspect
     }
 
     /**
-     * 获取请求的参数，放到log中
+     *  获取请求的参数，放到log中
      * 
      * @param operLog 操作日志
      * @throws Exception 异常
      */
     private void setRequestValue(SysOperLog operLog, Object[] args) throws Exception
     {
-        String params = JSON.toJSONString(args,true);
+        List<?> param = new ArrayList<>(Arrays.asList(args)).stream().filter(p -> !(p instanceof ServletResponse))
+                .collect(Collectors.toList());
+        log.debug("args:{}", param);
+        String params = JSON.toJSONString(param, true);
         operLog.setOperParam(StringUtils.substring(params, 0, 2000));
     }
 

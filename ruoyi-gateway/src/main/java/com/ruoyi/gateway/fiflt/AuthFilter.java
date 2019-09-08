@@ -34,7 +34,8 @@ import reactor.core.publisher.Mono;
 public class AuthFilter implements GlobalFilter, Ordered
 {
     // 排除过滤的 uri 地址
-    private static final String[]           whiteList = {"/auth/login", "/user/register"};
+    // swagger排除自行添加
+    private static final String[]           whiteList = {"/auth/login", "/user/register", "/system/v2/api-docs"};
 
     @Resource(name = "stringRedisTemplate")
     private ValueOperations<String, String> ops;
@@ -44,7 +45,6 @@ public class AuthFilter implements GlobalFilter, Ordered
     {
         String url = exchange.getRequest().getURI().getPath();
         log.info("url:{}", url);
-        String userId = null;
         // 跳过不需要验证的路径
         if (Arrays.asList(whiteList).contains(url))
         {
@@ -56,19 +56,17 @@ public class AuthFilter implements GlobalFilter, Ordered
         {
             return setUnauthorizedResponse(exchange, "token can't null or empty string");
         }
-        if (StringUtils.isNotBlank(token))
+        String userStr = ops.get(Constants.ACCESS_TOKEN + token);
+        JSONObject jo = JSONObject.parseObject(userStr);
+        String userId = jo.getString("userId");
+        // 查询token信息
+        if (StringUtils.isBlank(userId))
         {
-            String userStr = ops.get(Constants.ACCESS_TOKEN + token);
-            JSONObject jo = JSONObject.parseObject(userStr);
-            userId = jo.getString("userId");
-            // 查询token信息
-            if (StringUtils.isBlank(userId))
-            {
-                return setUnauthorizedResponse(exchange, "token verify error");
-            }
+            return setUnauthorizedResponse(exchange, "token verify error");
         }
         // 设置userId到request里，后续根据userId，获取用户信息
-        ServerHttpRequest mutableReq = exchange.getRequest().mutate().header(Constants.USER_KEY, userId).build();
+        ServerHttpRequest mutableReq = exchange.getRequest().mutate().header(Constants.CURRENT_ID, userId)
+                .header(Constants.CURRENT_USERNAME, jo.getString("loginName")).build();
         ServerWebExchange mutableExchange = exchange.mutate().request(mutableReq).build();
         return chain.filter(mutableExchange);
     }
