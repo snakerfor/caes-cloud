@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.major.mapper.TestLibMapper">
+    
+    <resultMap type="TestLib" id="TestLibResult">
+        <result property="quesId"    column="ques_id"    />
+        <result property="quesContent"    column="ques_content"    />
+        <result property="typeId"    column="type_id"    />
+        <result property="answer"    column="answer"    />
+        <result property="quesSort"    column="ques_sort"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="calcScore"    column="calc_score"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectTestLibVo">
+        select ques_id, ques_content, type_id, answer, ques_sort, create_by, create_time, update_by, update_time, calc_score, remark from t_test_lib
+    </sql>
+
+    <select id="selectTestLibList" parameterType="TestLib" resultMap="TestLibResult">
+        <include refid="selectTestLibVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectTestLibById" parameterType="Integer" resultMap="TestLibResult">
+        <include refid="selectTestLibVo"/>
+        where ques_id = #{quesId}
+    </select>
+        
+    <insert id="insertTestLib" parameterType="TestLib">
+        insert into t_test_lib
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="quesId != null ">ques_id,</if>
+            <if test="quesContent != null  and quesContent != ''">ques_content,</if>
+            <if test="typeId != null ">type_id,</if>
+            <if test="answer != null  and answer != ''">answer,</if>
+            <if test="quesSort != null  and quesSort != ''">ques_sort,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="calcScore != null ">calc_score,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="quesId != null ">#{quesId},</if>
+            <if test="quesContent != null  and quesContent != ''">#{quesContent},</if>
+            <if test="typeId != null ">#{typeId},</if>
+            <if test="answer != null  and answer != ''">#{answer},</if>
+            <if test="quesSort != null  and quesSort != ''">#{quesSort},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="calcScore != null ">#{calcScore},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTestLib" parameterType="TestLib">
+        update t_test_lib
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="quesContent != null  and quesContent != ''">ques_content = #{quesContent},</if>
+            <if test="typeId != null ">type_id = #{typeId},</if>
+            <if test="answer != null  and answer != ''">answer = #{answer},</if>
+            <if test="quesSort != null  and quesSort != ''">ques_sort = #{quesSort},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="calcScore != null ">calc_score = #{calcScore},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where ques_id = #{quesId}
+    </update>
+
+    <delete id="deleteTestLibById" parameterType="Integer">
+        delete from t_test_lib where ques_id = #{quesId}
+    </delete>
+
+    <delete id="deleteTestLibByIds" parameterType="String">
+        delete from t_test_lib where ques_id in 
+        <foreach item="quesId" collection="array" open="(" separator="," close=")">
+            #{quesId}
+        </foreach>
+    </delete>
+    
+</mapper>
