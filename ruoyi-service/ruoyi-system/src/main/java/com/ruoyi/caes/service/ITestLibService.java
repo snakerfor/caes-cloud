@@ -1,6 +1,6 @@
-package com.ruoyi.major.service;
+package com.ruoyi.caes.service;
 
-import com.ruoyi.major.domain.TestLib;
+import com.ruoyi.caes.domain.TestLib;
 import java.util.List;
 
 /**
@@ -58,4 +58,7 @@ public interface ITestLibService
      * @return 结果
      */
     public int deleteTestLibById(Integer quesId);
+
+
+
 }

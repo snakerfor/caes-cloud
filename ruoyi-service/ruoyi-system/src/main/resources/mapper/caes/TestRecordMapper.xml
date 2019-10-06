@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.caes.mapper.TestRecordMapper">
+    
+    <resultMap type="TestRecord" id="TestRecordResult">
+        <result property="testNo"    column="test_no"    />
+        <result property="userId"    column="user_id"    />
+        <result property="typeId"    column="type_id"    />
+        <result property="testScore"    column="test_score"    />
+        <result property="testResult"    column="test_result"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectTestRecordVo">
+        select test_no, user_id, type_id, test_score, test_result, create_time, update_time, create_by, update_by, remark from t_test_record
+    </sql>
+
+    <select id="selectTestRecordList" parameterType="TestRecord" resultMap="TestRecordResult">
+        <include refid="selectTestRecordVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectTestRecordById" parameterType="String" resultMap="TestRecordResult">
+        <include refid="selectTestRecordVo"/>
+        where test_no = #{testNo}
+    </select>
+        
+    <insert id="insertTestRecord" parameterType="TestRecord">
+        <selectKey keyProperty="testNo" resultType="string" order="BEFORE">
+            select replace(uuid(), '-', '') as id from dual
+        </selectKey>
+        insert into t_test_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="testNo != null  and testNo != ''">test_no,</if>
+            <if test="userId != null ">user_id,</if>
+            <if test="typeId != null ">type_id,</if>
+            <if test="testScore != null  and testScore != ''">test_score,</if>
+            <if test="testResult != null  and testResult != ''">test_result,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="testNo != null  and testNo != ''">#{testNo},</if>
+            <if test="userId != null ">#{userId},</if>
+            <if test="typeId != null ">#{typeId},</if>
+            <if test="testScore != null  and testScore != ''">#{testScore},</if>
+            <if test="testResult != null  and testResult != ''">#{testResult},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTestRecord" parameterType="TestRecord">
+        update t_test_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="typeId != null ">type_id = #{typeId},</if>
+            <if test="testScore != null  and testScore != ''">test_score = #{testScore},</if>
+            <if test="testResult != null  and testResult != ''">test_result = #{testResult},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where test_no = #{testNo}
+    </update>
+
+    <delete id="deleteTestRecordById" parameterType="String">
+        delete from t_test_record where test_no = #{testNo}
+    </delete>
+
+    <delete id="deleteTestRecordByIds" parameterType="String">
+        delete from t_test_record where test_no in 
+        <foreach item="testNo" collection="array" open="(" separator="," close=")">
+            #{testNo}
+        </foreach>
+    </delete>
+    
+</mapper>

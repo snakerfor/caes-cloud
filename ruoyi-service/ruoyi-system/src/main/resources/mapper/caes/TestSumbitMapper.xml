@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.caes.mapper.TestSumbitMapper">
+    
+    <resultMap type="TestSumbit" id="TestSumbitResult">
+        <result property="sumbitId"    column="sumbit_id"    />
+        <result property="testNo"    column="test_no"    />
+        <result property="userId"    column="user_id"    />
+        <result property="answer"    column="answer"    />
+        <result property="quesId"    column="ques_id"    />
+    </resultMap>
+
+    <sql id="selectTestSumbitVo">
+        select sumbit_id, test_no, user_id, answer, ques_id from t_test_sumbit
+    </sql>
+
+    <select id="selectTestSumbitList" parameterType="TestSumbit" resultMap="TestSumbitResult">
+        <include refid="selectTestSumbitVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectTestSumbitById" parameterType="Long" resultMap="TestSumbitResult">
+        <include refid="selectTestSumbitVo"/>
+        where sumbit_id = #{sumbitId}
+    </select>
+        
+    <insert id="insertTestSumbit" parameterType="TestSumbit" useGeneratedKeys="true" keyProperty="sumbitId" >
+        insert into t_test_sumbit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sumbitId != null ">sumbit_id,</if>
+            <if test="testNo != null  and testNo != ''">test_no,</if>
+            <if test="userId != null ">user_id,</if>
+            <if test="answer != null  and answer != ''">answer,</if>
+            <if test="quesId != null ">ques_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sumbitId != null ">#{sumbitId},</if>
+            <if test="testNo != null  and testNo != ''">#{testNo},</if>
+            <if test="userId != null ">#{userId},</if>
+            <if test="answer != null  and answer != ''">#{answer},</if>
+            <if test="quesId != null ">#{quesId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTestSumbit" parameterType="TestSumbit">
+        update t_test_sumbit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="testNo != null  and testNo != ''">test_no = #{testNo},</if>
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="answer != null  and answer != ''">answer = #{answer},</if>
+            <if test="quesId != null ">ques_id = #{quesId},</if>
+        </trim>
+        where sumbit_id = #{sumbitId}
+    </update>
+
+    <delete id="deleteTestSumbitById" parameterType="Long">
+        delete from t_test_sumbit where sumbit_id = #{sumbitId}
+    </delete>
+
+    <delete id="deleteTestSumbitByIds" parameterType="String">
+        delete from t_test_sumbit where sumbit_id in 
+        <foreach item="sumbitId" collection="array" open="(" separator="," close=")">
+            #{sumbitId}
+        </foreach>
+    </delete>
+
+    <select id="selectCalcScore" resultType="java.util.HashMap" parameterType="String">
+        SELECT
+            b.ques_sort as quesSort,SUM(case when t.answer = b.answer then 1 ELSE 0 END) as score
+        FROM
+            t_test_sumbit t,t_test_lib b
+        WHERE 1=1
+            and t.ques_id = b.ques_id
+            and t.test_no = #{testNo}
+        GROUP BY b.ques_sort
+    </select>
+
+</mapper>
