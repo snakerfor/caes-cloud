@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.major.mapper.TestLibMapper">
+<mapper namespace="com.ruoyi.caes.mapper.TestLibMapper">
     
     <resultMap type="TestLib" id="TestLibResult">
         <result property="quesId"    column="ques_id"    />
@@ -15,11 +15,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="calcScore"    column="calc_score"    />
+        <result property="quesOrder"    column="ques_order"    />
         <result property="remark"    column="remark"    />
     </resultMap>
 
     <sql id="selectTestLibVo">
-        select ques_id, ques_content, type_id, answer, ques_sort, create_by, create_time, update_by, update_time, calc_score, remark from t_test_lib
+        select ques_id, ques_content, type_id, answer, ques_sort, create_by, create_time, update_by, update_time, calc_score, ques_order, remark from t_test_lib
     </sql>
 
     <select id="selectTestLibList" parameterType="TestLib" resultMap="TestLibResult">
@@ -46,6 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null  and updateBy != ''">update_by,</if>
             <if test="updateTime != null ">update_time,</if>
             <if test="calcScore != null ">calc_score,</if>
+            <if test="quesOrder != null ">ques_order,</if>
             <if test="remark != null  and remark != ''">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -59,6 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
             <if test="updateTime != null ">#{updateTime},</if>
             <if test="calcScore != null ">#{calcScore},</if>
+            <if test="quesOrder != null ">#{quesOrder},</if>
             <if test="remark != null  and remark != ''">#{remark},</if>
          </trim>
     </insert>
@@ -75,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
             <if test="updateTime != null ">update_time = #{updateTime},</if>
             <if test="calcScore != null ">calc_score = #{calcScore},</if>
+            <if test="quesOrder != null ">calc_score = #{quesOrder},</if>
             <if test="remark != null  and remark != ''">remark = #{remark},</if>
         </trim>
         where ques_id = #{quesId}

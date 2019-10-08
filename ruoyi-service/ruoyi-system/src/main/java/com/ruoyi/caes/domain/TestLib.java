@@ -1,4 +1,4 @@
-package com.ruoyi.major.domain;
+package com.ruoyi.caes.domain;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -37,6 +37,18 @@ public class TestLib extends BaseEntity
     /** 计算分数 */
     @Excel(name = "计算分数")
     private Integer calcScore;
+
+    public Integer getQuesOrder() {
+        return quesOrder;
+    }
+
+    public void setQuesOrder(Integer quesOrder) {
+        this.quesOrder = quesOrder;
+    }
+
+    /** 计算分数 */
+    @Excel(name = "试题顺序")
+    private Integer quesOrder;
 
     public void setQuesId(Integer quesId) 
     {
@@ -106,6 +118,7 @@ public class TestLib extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("calcScore", getCalcScore())
+            .append("quesOrder", getQuesOrder())
             .append("remark", getRemark())
             .toString();
     }

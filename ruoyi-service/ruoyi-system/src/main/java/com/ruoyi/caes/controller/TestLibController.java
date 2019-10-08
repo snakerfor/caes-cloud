@@ -1,7 +1,7 @@
-package com.ruoyi.major.controller;
+package com.ruoyi.caes.controller;
 
-import com.ruoyi.major.domain.TestLib;
-import com.ruoyi.major.service.ITestLibService;
+import com.ruoyi.caes.domain.TestLib;
+import com.ruoyi.caes.service.ITestLibService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
