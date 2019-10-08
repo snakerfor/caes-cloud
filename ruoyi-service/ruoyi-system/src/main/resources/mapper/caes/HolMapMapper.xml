@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.caes.mapper.HolMapMapper">
+    
+    <resultMap type="HolMap" id="HolMapResult">
+        <result property="holRes"    column="hol_res"    />
+        <result property="major"    column="major"    />
+    </resultMap>
+
+    <sql id="selectHolMapVo">
+        select hol_res, major from t_hol_map
+    </sql>
+
+    <select id="selectHolMapList" parameterType="HolMap" resultMap="HolMapResult">
+        <include refid="selectHolMapVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectHolMapById" parameterType="String" resultMap="HolMapResult">
+        <include refid="selectHolMapVo"/>
+        where hol_res = #{holRes}
+    </select>
+        
+    <insert id="insertHolMap" parameterType="HolMap">
+        insert into t_hol_map
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="holRes != null  and holRes != ''">hol_res,</if>
+            <if test="major != null  and major != ''">major,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="holRes != null  and holRes != ''">#{holRes},</if>
+            <if test="major != null  and major != ''">#{major},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHolMap" parameterType="HolMap">
+        update t_hol_map
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="major != null  and major != ''">major = #{major},</if>
+        </trim>
+        where hol_res = #{holRes}
+    </update>
+
+    <delete id="deleteHolMapById" parameterType="String">
+        delete from t_hol_map where hol_res = #{holRes}
+    </delete>
+
+    <delete id="deleteHolMapByIds" parameterType="String">
+        delete from t_hol_map where hol_res in 
+        <foreach item="holRes" collection="array" open="(" separator="," close=")">
+            #{holRes}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,9 +1,12 @@
 package com.ruoyi.caes.controller;
 
+import com.ruoyi.caes.domain.HolMap;
 import com.ruoyi.caes.domain.TestRecord;
 import com.ruoyi.caes.domain.TestSumbit;
+import com.ruoyi.caes.service.IHolMapService;
 import com.ruoyi.caes.service.ITestRecordService;
 import com.ruoyi.caes.service.ITestSumbitService;
+import com.ruoyi.common.utils.StringUtils;
 import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +40,9 @@ public class TestSumbitController extends BaseController
 
 	@Autowired
 	private ITestRecordService testRecordService;
+
+	@Autowired
+	private IHolMapService holMapService;
 
 
 
@@ -99,7 +105,14 @@ public class TestSumbitController extends BaseController
 		testRecord.setTestResult(rt.toString());
 		testRecordService.updateTestRecord(testRecord);
 //		return toAjax(testSumbitService.insertTestSumbit(testSumbit));
-		return toAjax(1).put("data",testRecord.getTestResult());
+		HolMap holMap = holMapService.selectHolMapById(testRecord.getTestResult());
+		if(holMap == null){
+			holMap = new HolMap();
+		}
+		if(StringUtils.isEmpty(holMap.getMajor())){
+			holMap.setMajor("旅游管理、旅游管理、连锁经营管理、酒店管理");
+		}
+		return toAjax(1).put("data",holMap);
 	}
 
 	/**
