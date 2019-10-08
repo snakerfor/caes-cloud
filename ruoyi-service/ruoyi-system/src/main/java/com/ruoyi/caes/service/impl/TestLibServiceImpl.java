@@ -1,10 +1,10 @@
-package com.ruoyi.major.service.impl;
+package com.ruoyi.caes.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.major.domain.TestLib;
-import com.ruoyi.major.mapper.TestLibMapper;
-import com.ruoyi.major.service.ITestLibService;
+import com.ruoyi.caes.domain.TestLib;
+import com.ruoyi.caes.mapper.TestLibMapper;
+import com.ruoyi.caes.service.ITestLibService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.common.core.text.Convert;

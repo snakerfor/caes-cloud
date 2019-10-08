@@ -1,6 +1,6 @@
-package com.ruoyi.major.mapper;
+package com.ruoyi.caes.mapper;
 
-import com.ruoyi.major.domain.TestLib;
+import com.ruoyi.caes.domain.TestLib;
 import java.util.List;
 
 /**
