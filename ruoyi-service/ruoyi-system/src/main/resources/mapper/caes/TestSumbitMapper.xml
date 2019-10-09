@@ -78,4 +78,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         GROUP BY b.ques_sort
     </select>
 
+    <select id="selectCreateScore" resultType="java.util.HashMap" parameterType="String">
+        SELECT
+            SUM(case when t.answer = b.answer then 1 ELSE 0 END) as score
+        FROM
+            t_test_sumbit t,t_test_lib b
+        WHERE 1=1
+            and t.ques_id = b.ques_id
+            and t.test_no = #{testNo}
+    </select>
+
 </mapper>

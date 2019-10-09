@@ -61,4 +61,6 @@ public interface TestSumbitMapper
     public int deleteTestSumbitByIds(String[] sumbitIds);
 
     public List<Map<String,Object>> selectCalcScore(String testNo);
+
+    public Map<String,Object> selectCreateScore(String testNo);
 }

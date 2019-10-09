@@ -62,4 +62,8 @@ public interface ITestSumbitService
 
 
     public List<Map<String, Object>> selectCalcScore(String testNo);
+
+    public Map<String, Object> getMajorTest(List<TestSumbit> testSumbits, Long userId, String userName);
+
+    public Map<String, Object> getCreateTest(List<TestSumbit> testSumbits, Long userId, String userName);
 }
