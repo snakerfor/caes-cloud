@@ -1,9 +1,12 @@
 package com.ruoyi.caes.controller;
 
+import com.ruoyi.caes.domain.HolMap;
 import com.ruoyi.caes.domain.TestRecord;
 import com.ruoyi.caes.domain.TestSumbit;
+import com.ruoyi.caes.service.IHolMapService;
 import com.ruoyi.caes.service.ITestRecordService;
 import com.ruoyi.caes.service.ITestSumbitService;
+import com.ruoyi.common.utils.StringUtils;
 import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +41,9 @@ public class TestSumbitController extends BaseController
 	@Autowired
 	private ITestRecordService testRecordService;
 
+	@Autowired
+	private IHolMapService holMapService;
+
 
 
 	/**
@@ -61,45 +67,21 @@ public class TestSumbitController extends BaseController
 	
 	
 	/**
-	 * 新增保存测评提交
+	 * 新增保存测评提交(专业报考测评)
 	 */
-	@PostMapping("save")
-	public R addSave(@RequestBody List<TestSumbit> testSumbits)
+	@PostMapping("saveMajor")
+	public R saveMajor(@RequestBody List<TestSumbit> testSumbits)
 	{
-		TestRecord testRecord = new TestRecord();
-		testRecord.setUserId(getCurrentUserId());
-		//专业报考测评 类型
-		testRecord.setTypeId(1);
-		testRecord.setCreateBy(getLoginName());
-		testRecordService.insertTestRecord(testRecord);
-		for (TestSumbit testSumbit : testSumbits) {
-			testSumbit.setTestNo(testRecord.getTestNo());
-			logger.debug(testRecord.getTestNo());
-			testSumbit.setUserId(getCurrentUserId());
-			testSumbitService.insertTestSumbit(testSumbit);
-		}
-		List<Map<String, Object>> calcResult =  testSumbitService.selectCalcScore(testRecord.getTestNo());
-		Map<String, Integer> calcScore = new LinkedHashMap<String, Integer>();
-		for (Map<String, Object> map : calcResult) {
-			calcScore.put((String) map.get("quesSort"),Integer.parseInt(map.get("score").toString()));
-		}
-		Map<String,Integer> calcOrder = sortByValue(calcScore);
-		int count = 0;
-		StringBuffer st = new StringBuffer();
-		StringBuffer rt = new StringBuffer();
-		for (Map.Entry<String, Integer> entry : calcOrder.entrySet()) {
-			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-			st.append(entry.getKey()+"="+entry.getValue()+",");
-			if(count < 3){
-				rt.append(entry.getKey());
-				count++;
-			}
-		}
-		testRecord.setTestScore(st.substring(0,st.length()-1));
-		testRecord.setTestResult(rt.toString());
-		testRecordService.updateTestRecord(testRecord);
-//		return toAjax(testSumbitService.insertTestSumbit(testSumbit));
-		return toAjax(1).put("data",testRecord.getTestResult());
+		return toAjax(1).put("data",testSumbitService.getMajorTest(testSumbits,getCurrentUserId(),getLoginName()));
+	}
+
+	/**
+	 * 新增保存测评提交（创新创业能力）
+	 */
+	@PostMapping("saveCreate")
+	public R saveCreate(@RequestBody List<TestSumbit> testSumbits)
+	{
+		return toAjax(1).put("data",testSumbitService.getCreateTest(testSumbits,getCurrentUserId(),getLoginName()));
 	}
 
 	/**
@@ -120,13 +102,4 @@ public class TestSumbitController extends BaseController
 		return toAjax(testSumbitService.deleteTestSumbitByIds(ids));
 	}
 
-
-	public <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
-		Map<K, V> result = new LinkedHashMap<>();
-
-		map.entrySet().stream()
-				.sorted(Map.Entry.<K, V>comparingByValue()
-						.reversed()).forEachOrdered(e -> result.put(e.getKey(), e.getValue()));
-		return result;
-	}
 }
