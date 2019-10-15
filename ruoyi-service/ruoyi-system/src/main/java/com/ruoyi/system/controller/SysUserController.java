@@ -1,5 +1,6 @@
 package com.ruoyi.system.controller;
 
+import com.ruoyi.system.domain.SysRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,10 @@ import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ISysMenuService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.util.PasswordUtil;
+
+import javax.management.relation.Role;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 用户 提供者
@@ -183,4 +188,36 @@ public class SysUserController extends BaseController
     {
         return toAjax(sysUserService.deleteUserByIds(ids));
     }
+
+    /**
+     * 新增保存用户
+     */
+    @PostMapping("register")
+    public R register(@RequestBody SysUser sysUser)
+    {
+        if (UserConstants.USER_NAME_NOT_UNIQUE.equals(sysUserService.checkLoginNameUnique(sysUser.getLoginName())))
+        {
+            return R.error("新增用户'" + sysUser.getLoginName() + "'失败，登录账号已存在");
+        }
+        if(!"caes".equals(sysUser.getRemark()) && !"stad".equals(sysUser.getRemark())){
+            return R.error("请联系管理员获取邀请码！");
+        }
+        // 根据邀请码 组合角色
+        SysRole sysRole = new SysRole();
+        List<Long> roles = new ArrayList<Long>();
+        if("caes".equals(sysUser.getRemark())){
+            roles.add(1L);
+        }else{
+            roles.add(13L);
+        }
+        sysUser.setRoleIds(roles);
+
+        sysUser.setSalt(RandomUtil.randomStr(6));
+        sysUser.setPassword(
+                PasswordUtil.encryptPassword(sysUser.getLoginName(), sysUser.getPassword(), sysUser.getSalt()));
+        sysUser.setCreateBy(getLoginName());
+        return toAjax(sysUserService.insertUser(sysUser));
+    }
+
+
 }
