@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.competition.mapper.competitionMapper">
+    
+    <resultMap type="competition" id="competitionResult">
+        <result property="productionId"    column="production_id"    />
+        <result property="name"    column="name"    />
+        <result property="domain"    column="domain"    />
+        <result property="desc"    column="desc"    />
+        <result property="leader"    column="leader"    />
+        <result property="team"    column="team"    />
+        <result property="teamDesc"    column="team_desc"    />
+        <result property="currentDesc"    column="current_desc"    />
+        <result property="futureDesc"    column="future_desc"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="editTime"    column="edit_time"    />
+        <result property="editUser"    column="edit_user"    />
+    </resultMap>
+
+    <sql id="selectcompetitionVo">
+        select `production_id`, `name`, `domain`, `desc`, `leader`, `team`, `team_desc`, `current_desc`, `future_desc`, `create_time`, `create_user`, `edit_time`, `edit_user` from t_contest_production
+    </sql>
+
+    <select id="selectcompetitionList" parameterType="competition" resultMap="competitionResult">
+        <include refid="selectcompetitionVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectcompetitionById" parameterType="String" resultMap="competitionResult">
+        <include refid="selectcompetitionVo"/>
+        where production_id = #{productionId}
+    </select>
+        
+    <insert id="insertcompetition" parameterType="competition">
+        insert into t_contest_production
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productionId != null  and productionId != ''">`production_id`,</if>
+            <if test="name != null  and name != ''">`name`,</if>
+            <if test="domain != null  and domain != ''">`domain`,</if>
+            <if test="desc != null  and desc != ''">`desc`,</if>
+            <if test="leader != null  and leader != ''">`leader`,</if>
+            <if test="team != null  and team != ''">`team`,</if>
+            <if test="teamDesc != null  and teamDesc != ''">`team_desc`,</if>
+            <if test="currentDesc != null  and currentDesc != ''">`current_desc`,</if>
+            <if test="futureDesc != null  and futureDesc != ''">`future_desc`,</if>
+            <if test="createTime != null ">`create_time`,</if>
+            <if test="createUser != null  and createUser != ''">`create_user`,</if>
+            <if test="editTime != null ">`edit_time`,</if>
+            <if test="editUser != null  and editUser != ''">`edit_user`,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productionId != null  and productionId != ''">#{productionId},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="domain != null  and domain != ''">#{domain},</if>
+            <if test="desc != null  and desc != ''">#{desc},</if>
+            <if test="leader != null  and leader != ''">#{leader},</if>
+            <if test="team != null  and team != ''">#{team},</if>
+            <if test="teamDesc != null  and teamDesc != ''">#{teamDesc},</if>
+            <if test="currentDesc != null  and currentDesc != ''">#{currentDesc},</if>
+            <if test="futureDesc != null  and futureDesc != ''">#{futureDesc},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="createUser != null  and createUser != ''">#{createUser},</if>
+            <if test="editTime != null ">#{editTime},</if>
+            <if test="editUser != null  and editUser != ''">#{editUser},</if>
+         </trim>
+    </insert>
+
+    <update id="updatecompetition" parameterType="competition">
+        update t_contest_production
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">`name` = #{name},</if>
+            <if test="domain != null  and domain != ''">`domain` = #{domain},</if>
+            <if test="desc != null  and desc != ''">`desc` = #{desc},</if>
+            <if test="leader != null  and leader != ''">`leader` = #{leader},</if>
+            <if test="team != null  and team != ''">`team` = #{team},</if>
+            <if test="teamDesc != null  and teamDesc != ''">`team_desc` = #{teamDesc},</if>
+            <if test="currentDesc != null  and currentDesc != ''">`current_desc` = #{currentDesc},</if>
+            <if test="futureDesc != null  and futureDesc != ''">`future_desc` = #{futureDesc},</if>
+            <if test="createTime != null ">`create_time` = #{createTime},</if>
+            <if test="createUser != null  and createUser != ''">`create_user` = #{createUser},</if>
+            <if test="editTime != null ">`edit_time` = #{editTime},</if>
+            <if test="editUser != null  and editUser != ''">`edit_user` = #{editUser},</if>
+        </trim>
+        where production_id = #{productionId}
+    </update>
+
+    <delete id="deletecompetitionById" parameterType="String">
+        delete from t_contest_production where production_id = #{productionId}
+    </delete>
+
+    <delete id="deletecompetitionByIds" parameterType="String">
+        delete from t_contest_production where production_id in 
+        <foreach item="productionId" collection="array" open="(" separator="," close=")">
+            #{productionId}
+        </foreach>
+    </delete>
+    
+</mapper>
