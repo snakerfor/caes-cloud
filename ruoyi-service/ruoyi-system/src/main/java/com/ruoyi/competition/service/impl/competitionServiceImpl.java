@@ -59,16 +59,16 @@ public class competitionServiceImpl implements IcompetitionService
     }
 
     /**
-     * 修改大赛作品申报提交
+     * 教师审核大赛作品申报
      * 
      * @param competition 大赛作品申报提交
      * @return 结果
      */
     @Override
-    public int updatecompetition(competition competition)
+    public int reviewcompetition(competition competition)
     {
         competition.setUpdateTime(DateUtils.getNowDate());
-        return competitionMapper.updatecompetition(competition);
+        return competitionMapper.reviewcompetition(competition);
     }
 
     /**

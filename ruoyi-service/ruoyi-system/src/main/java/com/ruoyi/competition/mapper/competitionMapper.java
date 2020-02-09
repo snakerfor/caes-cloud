@@ -36,12 +36,12 @@ public interface competitionMapper
     public int insertcompetition(competition competition);
 
     /**
-     * 修改大赛作品申报提交
+     * 教师审核大赛作品申报
      * 
      * @param competition 大赛作品申报提交
      * @return 结果
      */
-    public int updatecompetition(competition competition);
+    public int reviewcompetition(competition competition);
 
     /**
      * 删除大赛作品申报提交
