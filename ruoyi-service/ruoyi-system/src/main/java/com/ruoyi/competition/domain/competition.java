@@ -8,6 +8,7 @@ import java.util.Date;
 
 /**
  * 大赛作品申报提交对象 t_contest_production
+ * 继承BaseEntity基类 需修改:定义了与基类功能相同而名称不同的方法
  * 
  * @author Random-pro
  * @date 2020-02-03
@@ -62,6 +63,14 @@ public class competition extends BaseEntity
     /** 修改人 */
     @Excel(name = "修改人")
     private String editUser;
+
+    /** 作品层级 */
+    @Excel(name = "作品层级")
+    private char prodLevel;
+
+    /** 作品评价 */
+    @Excel(name = "作品评价")
+    private String prodEvaluate;
 
     public void setProductionId(String productionId) 
     {
@@ -162,14 +171,34 @@ public class competition extends BaseEntity
     {
         return editTime;
     }
-    public void setEditUser(String editUser) 
+    public void setEditUser(String editUser)
     {
         this.editUser = editUser;
     }
 
-    public String getEditUser() 
+    public String getEditUser()
     {
         return editUser;
+    }
+
+    public void setProdLevel(char prodLevel)
+    {
+        this.prodLevel = prodLevel;
+    }
+
+    public char getProdLevel()
+    {
+        return prodLevel;
+    }
+
+    public void setProdEvaluate(String prodEvaluate)
+    {
+        this.prodEvaluate = prodEvaluate;
+    }
+
+    public String getProdEvaluate()
+    {
+        return prodEvaluate;
     }
 
     @Override
@@ -188,6 +217,8 @@ public class competition extends BaseEntity
             .append("createUser", getCreateUser())
             .append("editTime", getEditTime())
             .append("editUser", getEditUser())
+            .append("prodLevel", getProdLevel())
+            .append("prodEvaluate", getProdEvaluate())
             .toString();
     }
 }

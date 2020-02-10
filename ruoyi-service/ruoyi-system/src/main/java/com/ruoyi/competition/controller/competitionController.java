@@ -65,14 +65,16 @@ public class competitionController extends BaseController
 	}
 
 	/**
-	 * 修改保存大赛作品申报提交
+	 * 教师 修改审核学生作品申报
 	 */
-	@PostMapping("update")
-	public R editSave(@RequestBody competition competition)
+	@PostMapping("review")
+	//@GetMapping("review")
+	public R teacherReview(@RequestBody competition competition)
+	//public R teacherReview(competition competition)
 	{
 		// 更新修改者
 		competition.setEditUser(getLoginName());
-		return toAjax(competitionService.updatecompetition(competition));
+		return toAjax(competitionService.reviewcompetition(competition));
 	}
 	
 	/**

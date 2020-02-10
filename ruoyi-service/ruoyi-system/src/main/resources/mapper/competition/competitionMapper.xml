@@ -18,16 +18,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createUser"    column="create_user"    />
         <result property="editTime"    column="edit_time"    />
         <result property="editUser"    column="edit_user"    />
+        <result property="prodLevel"    column="prod_level"    />
+        <result property="prodEvaluate"    column="prod_evaluate"    />
     </resultMap>
 
     <sql id="selectcompetitionVo">
-        select `production_id`, `name`, `domain`, `desc`, `leader`, `team`, `team_desc`, `current_desc`, `future_desc`, `create_time`, `create_user`, `edit_time`, `edit_user` from t_contest_production
+        select `production_id`, `name`, `domain`, `desc`, `leader`, `team`, `team_desc`, `current_desc`, `future_desc`, `create_time`, `create_user`, `edit_time`, `edit_user`, `prod_level`, `prod_evaluate` from t_contest_production
     </sql>
 
     <select id="selectcompetitionList" parameterType="competition" resultMap="competitionResult">
         <include refid="selectcompetitionVo"/>
-        <where>  
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        <where>
+            <!-- 教师 按类别模糊搜索大赛申报信息 -->
+            <if test="productionId != null and productionId != ''"> and `production_id` like concat('%', #{productionId}, '%')</if>
+            <if test="name != null  and name != ''"> and `name` like concat('%', #{name}, '%')</if>
+            <if test="domain != null and domain != ''"> and `domain` like concat('%', #{domain}, '%')</if>
+            <if test="desc != null and desc != ''"> and `desc` like concat('%', #{desc}, '%')</if>
+            <if test="leader != null and leader != ''"> and `leader` like concat('%', #{leader}, '%')</if>
+            <if test="team != null and team != ''"> and `team` like concat('%', #{team}, '%')</if>
+            <if test="teamDesc != null and teamDesc != ''"> and `team_desc` like concat('%', #{teamDesc}, '%')</if>
+            <if test="currentDesc != null and currentDesc != ''"> and `current_desc` like concat('%', #{currentDesc}, '%')</if>
+            <if test="futureDesc != null and futureDesc != ''"> and `future_desc` like concat('%', #{futureDesc}, '%')</if>
+            <if test="createTime != null"> and `create_time` = #{createTime}</if>
+            <if test="createUser != null and createUser != ''"> and `create_user` like concat('%', #{createUser}, '%')</if>
+            <if test="editTime != null"> and `edit_time` = #{editTime}</if>
+            <if test="editUser != null and editUser != ''"> and `edit_user` like concat('%', #{editUser}, '%')</if>
+            <if test="prodLevel != null and prodLevel != ''"> and `prod_level` like concat('%', #{prodLevel}, '%')</if>
+            <if test="prodEvaluate != null and prodEvaluate != ''"> and `prod_evaluate` like concat('%', #{prodEvaluate}, '%')</if>
         </where>
     </select>
     
@@ -70,7 +87,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updatecompetition" parameterType="competition">
+    <!-- 审查修改作品申报 -->
+    <update id="reviewcompetition" parameterType="competition">
         update t_contest_production
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null  and name != ''">`name` = #{name},</if>
@@ -85,6 +103,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createUser != null  and createUser != ''">`create_user` = #{createUser},</if>
             <if test="editTime != null ">`edit_time` = #{editTime},</if>
             <if test="editUser != null  and editUser != ''">`edit_user` = #{editUser},</if>
+            <if test="prodLevel != null and prodLevel != ''">`prod_level` = #{prodLevel},</if>
+            <if test="prodEvaluate != null and prodEvaluate != ''">`prod_evaluate` = #{prodEvaluate},</if>
         </trim>
         where production_id = #{productionId}
     </update>
