@@ -33,9 +33,9 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthFilter implements GlobalFilter, Ordered
 {
-    // 排除过滤的 uri 地址
-    // swagger排除自行添加
-    private static final String[]   whiteList = {"/auth/login", "/system/user/register", "/system/v2/api-docs"};
+    // 排除过滤的 uri 地址 swagger排除自行添加
+    // 文件下载:权限从FileController层控制 网关这里放行 上传:只允许教师登录后访问
+    private static final String[]   whiteList = {"/auth/login", "/system/user/register", "/system/v2/api-docs", "/system/file/download"};
 
     @Resource(name = "stringRedisTemplate")
     private ValueOperations<String, String> ops;

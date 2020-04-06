@@ -1,5 +1,11 @@
 # 数据源配置
 spring:
+  # 取消文件请求大小限制
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 0
+      max-request-size: 0
   redis:
     database: 1
     host: 47.105.181.30
