@@ -6,20 +6,20 @@
 
     <groupId>com.ruoyi.cloud</groupId>
     <artifactId>ruoyi-cloud</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
 
     <name>ruoyi-cloud</name>
     <url>http://www.ruoyi.vip</url>
     <description>若依管理系统</description>
 
     <properties>
-        <ruoyi.version>1.0.1-SNAPSHOT</ruoyi.version>
+        <ruoyi.version>1.1.0-SNAPSHOT</ruoyi.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
-        <spring-cloud.version>Greenwich.SR2</spring-cloud.version>
-        <spring-boot-admin.version>2.1.6</spring-boot-admin.version>
+        <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
+        <spring-cloud.version>Hoxton.SR3</spring-cloud.version>
+        <spring-boot-admin.version>2.2.2</spring-boot-admin.version>
         <druid.version>1.1.14</druid.version>
         <bitwalker.version>1.19</bitwalker.version>
         <kaptcha.version>2.3.2</kaptcha.version>
@@ -35,7 +35,7 @@
         <qiniu.version>[7.2.0, 7.2.99]</qiniu.version>
         <aliyun.oss.version>3.5.0</aliyun.oss.version>
         <qcloud.cos.version>5.6.3</qcloud.cos.version>
-        <fastjson.version>1.2.49</fastjson.version>
+        <fastjson.version>1.2.68</fastjson.version>
         <lombok.version>1.18.4</lombok.version>
         <hutool.version>4.1.19</hutool.version>
         <common-pool.version>2.6.2</common-pool.version>
@@ -146,14 +146,6 @@
                 <artifactId>velocity</artifactId>
                 <version>${velocity.version}</version>
             </dependency>
-
-            <!-- 代码生成 -->
-            <dependency>
-                <groupId>com.ruoyi.cloud</groupId>
-                <artifactId>ruoyi-generator</artifactId>
-                <version>${ruoyi.version}</version>
-            </dependency>
-
 
             <dependency>
                 <groupId>tk.mybatis</groupId>
