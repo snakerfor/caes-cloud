@@ -51,6 +51,7 @@ public class VelocityUtils
         velocityContext.put("permissionPrefix", getPermissionPrefix(moduleName, businessName));
         velocityContext.put("columns", genTable.getColumns());
         velocityContext.put("table", genTable);
+        velocityContext.put("nowDate", DateUtils.getTime());
         if (GenConstants.TPL_TREE.equals(tplCategory))
         {
             setTreeVelocityContext(velocityContext, genTable);
@@ -94,8 +95,16 @@ public class VelocityUtils
         templates.add("vm/java/controller.java.vm");
         templates.add("vm/xml/mapper.xml.vm");
         templates.add("vm/vue/api.js.vm");
-        templates.add("vm/vue/list.vue.vm");
-        templates.add("vm/vue/modal.vue.vm");
+        if (GenConstants.TPL_CRUD.equals(tplCategory))
+        {
+            templates.add("vm/vue/list.vue.vm");
+            templates.add("vm/vue/modal.vue.vm");
+        }
+        else if (GenConstants.TPL_TREE.equals(tplCategory))
+        {
+            templates.add("vm/vue/list-tree.vue.vm");
+            templates.add("vm/vue/modal-tree.vue.vm");
+        }
         templates.add("vm/sql/sql.vm");
         return templates;
     }
@@ -150,9 +159,17 @@ public class VelocityUtils
         {
             fileName = StringUtils.format("{}/views/{}/modules/{}Modal.vue", vuePath, moduleName, className);
         }
+        else if (template.contains("list-tree.vue.vm"))
+        {
+            fileName = StringUtils.format("{}/views/{}/{}List.vue", vuePath, moduleName, className);
+        }
+        else if (template.contains("modal-tree.vue.vm"))
+        {
+            fileName = StringUtils.format("{}/views/{}/modules/{}Modal.vue", vuePath, moduleName, className);
+        }
         else if (template.contains("api.js.vm"))
         {
-            fileName = StringUtils.format("{}/api/{}.js", vuePath, businessName);
+            fileName = StringUtils.format("{}/api/{}/{}.js", vuePath, moduleName, businessName);
         }
         else if (template.contains("sql.vm"))
         {

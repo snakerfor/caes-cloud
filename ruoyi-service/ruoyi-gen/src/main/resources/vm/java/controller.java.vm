@@ -31,7 +31,7 @@ public class ${ClassName}Controller extends BaseController
 	 * 查询${tableComment}
 	 */
 	@GetMapping("get/{${pkColumn.javaField}}")
-	public ${ClassName} get(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField})
+	public ${className} get(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField})
 	{
 		return ${className}Service.select${ClassName}ById(${pkColumn.javaField});
 		
@@ -72,7 +72,7 @@ public class ${ClassName}Controller extends BaseController
 	@PostMapping("remove")
 	public R remove(String ids)
 	{		
-		return toAjax(${className}Service.delete${ClassName}ByIds(ids));
+		return toAjax(${className}Service.delete${className}ByIds(ids));
 	}
 	
 }

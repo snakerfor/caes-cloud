@@ -22,9 +22,11 @@ import com.ruoyi.system.service.ISysMenuService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.util.PasswordUtil;
 
-import javax.management.relation.Role;
+import cn.hutool.core.convert.Convert;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 用户 提供者
@@ -65,6 +67,26 @@ public class SysUserController extends BaseController
     public SysUser findByUsername(@PathVariable("username") String username)
     {
         return sysUserService.selectUserByLoginName(username);
+    }
+
+    /**
+     * 查询拥有当前角色的所有用户
+     */
+    @GetMapping("hasRoles")
+    public Set<Long> hasRoles(String roleIds)
+    {
+        Long[] arr=Convert.toLongArray(roleIds);
+        return sysUserService.selectUserIdsHasRoles(arr);
+    }
+
+    /**
+     * 查询所有当前部门中的用户
+     */
+    @GetMapping("inDepts")
+    public Set<Long> inDept(String  deptIds)
+    {
+        Long[] arr=Convert.toLongArray(deptIds);
+        return sysUserService.selectUserIdsInDepts(arr);
     }
 
     /**
@@ -158,6 +180,10 @@ public class SysUserController extends BaseController
     @PostMapping("/resetPwd")
     public R resetPwdSave(@RequestBody SysUser user)
     {
+        if (null != user.getUserId() && SysUser.isAdmin(user.getUserId()))
+        {
+            return R.error("不允许修改超级管理员用户");
+        }
         user.setSalt(RandomUtil.randomStr(6));
         user.setPassword(PasswordUtil.encryptPassword(user.getLoginName(), user.getPassword(), user.getSalt()));
         return toAjax(sysUserService.resetUserPwd(user));
@@ -165,16 +191,19 @@ public class SysUserController extends BaseController
 
     /**
      * 修改状态
-     * @param sysUser
      * @return
      * @author zmr
      */
     @HasPermissions("system:user:edit")
     @PostMapping("status")
     @OperLog(title = "用户管理", businessType = BusinessType.UPDATE)
-    public R status(@RequestBody SysUser sysUser)
+    public R status(@RequestBody SysUser user)
     {
-        return toAjax(sysUserService.changeStatus(sysUser));
+        if (null != user.getUserId() && SysUser.isAdmin(user.getUserId()))
+        {
+            return R.error("不允许修改超级管理员用户");
+        }
+        return toAjax(sysUserService.changeStatus(user));
     }
 
     /**
@@ -218,6 +247,4 @@ public class SysUserController extends BaseController
         sysUser.setCreateBy(getLoginName());
         return toAjax(sysUserService.insertUser(sysUser));
     }
-
-
 }
