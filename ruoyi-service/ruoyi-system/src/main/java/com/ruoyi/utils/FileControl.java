@@ -102,6 +102,7 @@ public class FileControl {
                     file.transferTo(savePath);
                 } catch (IOException e) {
                     // IO异常不向上throw 直接以标识传递给上一级
+                    e.printStackTrace();
                     fileInfo.setSaveStatus(FileInfo.saveStatus.IO_ERROR);
                     return fileInfo;
                 }

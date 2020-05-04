@@ -1,5 +1,6 @@
 package com.ruoyi.system.controller;
 
+import com.ruoyi.system.domain.SysRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +24,9 @@ import com.ruoyi.system.util.PasswordUtil;
 
 import cn.hutool.core.convert.Convert;
 
-import javax.management.relation.Role;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 用户 提供者
@@ -190,7 +191,6 @@ public class SysUserController extends BaseController
 
     /**
      * 修改状态
-     * @param sysUser
      * @return
      * @author zmr
      */
@@ -247,6 +247,4 @@ public class SysUserController extends BaseController
         sysUser.setCreateBy(getLoginName());
         return toAjax(sysUserService.insertUser(sysUser));
     }
-
-
 }
