@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.competition.mapper.UploadListMapper">
+<mapper namespace="com.ruoyi.system.mapper.SysUploadListMapper">
     
-    <resultMap type="UploadList" id="UploadListResult">
+    <resultMap type="SysUploadList" id="UploadListResult">
         <result property="fileId"    column="file_id"    />
         <result property="fileName"    column="file_name"    />
         <result property="fileMd5"    column="file_md5"    />
@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select file_id, file_name, file_md5, file_size, file_auth, file_path, upload_time, download_count from t_upload_list
     </sql>
 
-    <select id="selectUploadList" parameterType="UploadList" resultMap="UploadListResult">
+    <select id="selectUploadList" parameterType="SysUploadList" resultMap="UploadListResult">
         <include refid="selectUploadListVo"/>
         <where>  
             <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
@@ -32,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where file_id = #{fileId}
     </select>
         
-    <insert id="insertUploadList" parameterType="UploadList">
+    <insert id="insertUploadList" parameterType="SysUploadList">
         insert into t_upload_list
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="fileId != null  and fileId != ''">file_id,</if>
@@ -56,7 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateUploadList" parameterType="UploadList">
+    <update id="updateUploadList" parameterType="SysUploadList">
         update t_upload_list
         <trim prefix="SET" suffixOverrides=",">
             <if test="fileName != null  and fileName != ''">file_name = #{fileName},</if>
