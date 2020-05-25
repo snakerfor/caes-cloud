@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.competition.mapper.EssayPublishMapper">
+    
+    <resultMap type="EssayPublish" id="EssayPublishResult">
+        <result property="essayId"    column="essay_id"    />
+        <result property="essayType"    column="essay_type"    />
+        <result property="essayTitle"    column="essay_title"    />
+        <result property="essayContent"    column="essay_content"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="attachmentId"    column="attachment_id"    />
+        <result property="viewCount"    column="view_count"    />
+        <!-- essay_attachment.file_id集 -->
+        <result property="fileIds"    column="file_ids"    />
+    </resultMap>
+
+    <!-- 文章简略信息 -->
+    <sql id="selectEssayPublishBrief">
+        select essay_id, essay_type, essay_title, CONCAT(LEFT(essay_content, 50), '...') AS essay_content, create_by, create_time, update_by, update_time, attachment_id, view_count from t_essay_publish
+    </sql>
+
+    <!-- 条件取得文章列表简略信息 -->
+    <select id="selectEssayPublishList" parameterType="EssayPublish" resultMap="EssayPublishResult">
+        <include refid="selectEssayPublishBrief"/>
+        <where>
+            <if test="essayType != null  and essayType != ''">and essay_type = #{essayType}</if>
+            <if test="essayTitle != null  and essayTitle != ''">and essay_title like concat('%', #{essayTitle}, '%')</if>
+            <if test="essayContent != null  and essayContent != ''">and essay_content like concat('%', #{essayContent}, '%')</if>
+        </where>
+    </select>
+
+    <!-- 文章详情 包含附件fileIds -->
+    <select id="selectEssayPublishById" parameterType="Integer" resultMap="EssayPublishResult">
+        <!--SELECT p.essay_id, p.essay_type, p.essay_title, p.essay_content, p.create_by, p.create_time, p.update_by, p.update_time, p.attachment_id, p.view_count, GROUP_CONCAT(if(p.attachment_id IS not NULL, a.file_id, null)) AS file_ids from t_essay_publish p, t_essay_attachment a WHERE (p.attachment_id = a.attachment_id or p.attachment_id IS NULL) and p.essay_id = #{essayId} GROUP BY p.essay_id-->
+        SELECT p.essay_id, p.essay_type, p.essay_title, p.essay_content, p.create_by, p.create_time, p.update_by, p.update_time, p.attachment_id, p.view_count, GROUP_CONCAT(a.file_id) AS file_ids  FROM t_essay_publish p LEFT JOIN t_essay_attachment a ON p.attachment_id = a.attachment_id where p.essay_id = #{essayId} GROUP BY p.essay_id
+    </select>
+        
+    <insert id="insertEssayPublish" parameterType="EssayPublish" useGeneratedKeys="true" keyProperty="essayId">
+        insert into t_essay_publish
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="essayType != null  and essayType != ''">essay_type,</if>
+            <if test="essayTitle != null  and essayTitle != ''">essay_title,</if>
+            <if test="essayContent != null  and essayContent != ''">essay_content,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="attachmentId != null ">attachment_id,</if>
+            <if test="viewCount != null ">view_count,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="essayType != null  and essayType != ''">#{essayType},</if>
+            <if test="essayTitle != null  and essayTitle != ''">#{essayTitle},</if>
+            <if test="essayContent != null  and essayContent != ''">#{essayContent},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="attachmentId != null ">#{attachmentId},</if>
+            <if test="viewCount != null ">#{viewCount},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEssayPublish" parameterType="EssayPublish">
+        update t_essay_publish
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="essayType != null  and essayType != ''">essay_type = #{essayType},</if>
+            <if test="essayTitle != null  and essayTitle != ''">essay_title = #{essayTitle},</if>
+            <if test="essayContent != null  and essayContent != ''">essay_content = #{essayContent},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            attachment_id = #{attachmentId},
+            <if test="viewCount != null ">view_count = #{viewCount},</if>
+        </trim>
+        where essay_id = #{essayId}
+    </update>
+
+    <delete id="deleteEssayPublishById" parameterType="Integer">
+        delete from t_essay_publish where essay_id = #{essayId}
+    </delete>
+
+    <delete id="deleteEssayPublishByIds" parameterType="String">
+        delete from t_essay_publish where essay_id in 
+        <foreach item="essayId" collection="array" open="(" separator="," close=")">
+            #{essayId}
+        </foreach>
+    </delete>
+    
+</mapper>

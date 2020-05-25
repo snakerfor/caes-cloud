@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.competition.mapper.EssayAttachmentMapper">
+    
+    <resultMap type="EssayAttachment" id="EssayAttachmentResult">
+        <result property="attachmentId"    column="attachment_id"    />
+        <result property="fileId"    column="file_id"    />
+    </resultMap>
+
+    <sql id="selectEssayAttachmentVo">
+        select attachment_id, file_id from t_essay_attachment
+    </sql>
+
+    <select id="selectEssayAttachmentList" parameterType="EssayAttachment" resultMap="EssayAttachmentResult">
+        <include refid="selectEssayAttachmentVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectEssayAttachmentById" parameterType="Integer" resultMap="EssayAttachmentResult">
+        <include refid="selectEssayAttachmentVo"/>
+        where attachment_id = #{attachmentId}
+    </select>
+        
+    <insert id="insertEssayAttachment" parameterType="EssayAttachment" useGeneratedKeys="true" keyProperty="attachmentId">
+        insert into t_essay_attachment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="attachmentId != null">attachment_id,</if>
+            <if test="fileId != null  and fileId != ''">file_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="attachmentId != null">#{attachmentId},</if>
+            <if test="fileId != null  and fileId != ''">#{fileId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEssayAttachment" parameterType="EssayAttachment">
+        update t_essay_attachment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fileId != null  and fileId != ''">file_id = #{fileId},</if>
+        </trim>
+        where attachment_id = #{attachmentId}
+    </update>
+
+    <delete id="deleteEssayAttachmentById" parameterType="Integer">
+        delete from t_essay_attachment where attachment_id = #{attachmentId}
+    </delete>
+
+    <delete id="deleteEssayAttachmentByIds" parameterType="String">
+        delete from t_essay_attachment where attachment_id in 
+        <foreach item="attachmentId" collection="array" open="(" separator="," close=")">
+            #{attachmentId}
+        </foreach>
+    </delete>
+    
+</mapper>
