@@ -26,6 +26,7 @@ public class HystrixFallbackHandler implements HandlerFunction<ServerResponse>
         Optional<Object> originalUris = serverRequest.attribute(GATEWAY_ORIGINAL_REQUEST_URL_ATTR);
         originalUris.ifPresent(originalUri -> log.error("网关执行请求:{}失败,hystrix服务降级处理", originalUri));
         return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(JSON.toJSONString(R.error("服务已被降级熔断"))));
+                .body(BodyInserters.fromObject(JSON.toJSONString(R.error("服务已被降级熔断"))));
+                                    // fromValue(JSON.toJSONString(R.error("服务已被降级熔断")))
     }
 }
